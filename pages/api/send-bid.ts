@@ -1,8 +1,9 @@
+import http from 'http'; // 👈 import
 import type { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Handle CORS preflight
+  // CORS preflight
   if (req.method === 'OPTIONS') {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -27,7 +28,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           'Content-Type': 'application/json',
           'X-Forwarded-For': bidRequest.device?.ip || '1.1.1.1',
         },
-        validateStatus: () => true, // Important: don't throw for non-200s
+        validateStatus: () => true,
+        httpAgent: new http.Agent({ keepAlive: true }) // 👈 Add this line
       }
     );
 
